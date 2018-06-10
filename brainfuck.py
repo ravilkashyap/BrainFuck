@@ -1,3 +1,4 @@
+import re
 import sys
 from sys import stdin,stdout,argv
 
@@ -6,13 +7,18 @@ def jumptable(code):
 	stack = []
 	jump = [None] * len(code)
 	for i,o in enumerate(code):
-	    if o=='[':						#Every time a "[" is encountered, push the current location  
-	        stack.append(i)				#of the instruction pointer on this stack
 
+	    #Every time a "[" is encountered, push the current location 
+	    #of the instruction pointer on this stack 
+	    if o=='[':						
+	        stack.append(i)				
 
-	    elif o==']':					#Whenever  a "]" is encountered, reset the instruction pointer 
-	        jump[i] = stack.pop()		#to the value that's currently on the top of the stack
-	        jump[jump[i]] = i 			#When a loop is complete, pop it off the stack.
+	    #Whenever  a "]" is encountered, reset the instruction pointer 
+	    #to the value that's currently on the top of the stack
+	    #When a loop is complete, pop it off the stack
+	    elif o==']':					
+	        jump[i] = stack.pop()		
+	        jump[jump[i]] = i 			
 	return jump
 
 
@@ -61,18 +67,26 @@ def main():
     
 	if len(argv)>1:
 
-	    if argv[1]=='--help':
-	    	print("""
-	    			BRAINFUCK INTERPRETER
-	    						-Krash
+	    if re.search(r"[*.*]",argv[1]) and argv[1] != '--help':
+	    	file=open(argv[1],'r')
+	    	code = file.read().strip()
+	    	file.close()
+	    	unfuck(code)
+	    	
+	    else:
+	    	print("""	
+
+                    -----------------BRAINFUCK INTERPRETER--------------
+	    							-Krash
+
+
 Usage :
 python3 brainfuck.py FILE
 
 Takes input from the FILE and compiles the BrainFuck code""")
 
-	    else:
-	    	file=open(argv[1])
-	    	unfuck(file)
+
+
 	else:
 		print("Enter the BrainFuck code :")
 		code=input()
