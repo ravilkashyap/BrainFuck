@@ -57,7 +57,6 @@ def unfuck(code):
 
         elif char == ']' and tape[tp]:     # loop back if !=0
             cp = jump[cp]
-
         else:
         	pass
 
